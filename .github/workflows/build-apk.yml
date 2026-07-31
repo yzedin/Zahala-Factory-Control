@@ -10,6 +10,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Buildozer
         run: |
-          echo "GitHub Action is working!"
+          sudo apt update
+          sudo apt install -y zip unzip openjdk-17-jdk
+          python -m pip install --upgrade pip
+          pip install buildozer cython
+
+      - name: Build APK
+        run: |
+          buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zahala-Factory-Control-APK
+          path: bin/*.apk
